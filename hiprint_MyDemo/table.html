@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+ <html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>table - hiprint</title>
+    <!-- hiprint -->
+    <link href="hiprint/css/hiprint.css" rel="stylesheet">
+    <link href="hiprint/css/print-lock.css" rel="stylesheet">
+    <link href="hiprint/css/print-lock.css" media="print" rel="stylesheet">
+    <!-- jQuery (hiprint 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="jquery-1.11.3.min.js"></script>
+    <style type="text/css">
+    #btnPrint{color: #ffffff;background-color: #428bca;border-color: #357ebd;border-radius: 4px;padding: 10px; text-decoration:none; }
+    #btnPrint:hover{color: #ffffff;background-color: #3276b1;border-color: #285e8e;}
+    #btnBatchPrint{color: #ffffff;background-color: #428bca;border-color: #357ebd;border-radius: 4px;padding: 10px; text-decoration:none; }
+    #btnBatchPrint:hover{color: #ffffff;background-color: #3276b1;border-color: #285e8e;}
+    #btnCreateHtml{color: #ffffff;background-color: #428bca;border-color: #357ebd;border-radius: 4px;padding: 10px; text-decoration:none; }
+    #btnCreateHtml:hover{color: #ffffff;background-color: #3276b1;border-color: #285e8e;}
+    </style>
+  </head>
+  <body>
+    <h1>hiprint 是一款用于web打印的js组件</h1><br />
+    <!--直接打印需额外引入socket.io.js 需安装软件<br /><br />-->
+    <a id="btnPrint" href="javascript:;">打印（先预览）</a>
+    <a id="btnBatchPrint" href="javascript:;">批量打印</a>
+    <a id="btnCreateHtml" href="javascript:;">生成Html</a>    <div id="hiprint-printTemplate" class="hiprint-printTemplate" style="margin-top:50px;">    <div id="print-preview" class="" style="margin-top:50px;margin-bottom:50px;">
+    <!-- 加载 hiprint 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <!-- polyfill.min.js解决浏览器兼容性问题v6.26.0-->
+    <script src="hiprint/polyfill.min.js"></script>
+    <!-- hiprint 核心js-->
+    <script src="hiprint/hiprint.bundle.js"></script>
+    <!-- 条形码生成组件-->
+    <!--<script src="hiprint/plugins/JsBarcode.all.min.js"></script>-->
+    <!-- 二维码生成组件-->
+    <!--<script src="hiprint/plugins/qrcode.js"></script>-->
+    <!-- 调用浏览器打印窗口helper类，可自行替换-->
+    <script src="hiprint/plugins/jquery.hiwprint.js"></script>
+    <script src="hiprint/plugins/socket.io.js"></script>
+    <script>
+        var printData = {
+            xiaoshouriqi: "2020-10-25", zongjijine: 136940,
+            table: [
+                    { number: 1, goodsname: "iPad 2019款 WIFI-32G", color: "黑", size: "10.2寸", unitprice: 2055.00 },
+                    { number: 2, goodsname: "iPad 2019款 WIFI-32G", color: "白", size: "10.2寸", unitprice: 2060.00 },
+                    { number: 3, goodsname: "iPad 2019款 WIFI-32G", color: "金", size: "10.2寸", unitprice: 2100.00 },
+                    { number: 4, goodsname: "iPad 2019款 WIFI-128G", color: "黑", size: "10.2寸", unitprice: 2590.00 },
+                    { number: 5, goodsname: "iPad 2019款 WIFI-128G", color: "白", size: "10.2寸", unitprice: 2590.00 },
+                    { number: 6, goodsname: "iPad 2019款 WIFI-128G", color: "金", size: "10.2寸", unitprice: 2585.00 },
+                    { number: 7, goodsname: "iPad 2019款 4G-32G", color: "黑", size: "10.2寸", unitprice: 2900.00 },
+                    { number: 8, goodsname: "iPad 2019款 4G-32G", color: "白", size: "10.2寸", unitprice: 2900.00 },
+                    { number: 9, goodsname: "iPad 2019款 4G-32G", color: "金", size: "10.2寸", unitprice: 2900.00 },
+                    { number: 10, goodsname: "iPad 2019款 4G-128G", color: "黑", size: "10.2寸", unitprice: 3550.00 },
+                    { number: 11, goodsname: "iPad 2019款 4G-128G", color: "白", size: "10.2寸", unitprice: 3550.00 },
+                    { number: 12, goodsname: "iPad 2019款 4G-128G", color: "金", size: "10.2寸", unitprice: 3540.00 },
+                    { number: 13, goodsname: "iPad Air3 2019款 WIFI-64G", color: "黑", size: "10.5寸", unitprice: 3315.00 },
+                    { number: 14, goodsname: "iPad Air3 2019款 WIFI-64G", color: "白", size: "10.5寸", unitprice: 3365.00 },
+                    { number: 15, goodsname: "iPad Air3 2019款 WIFI-64G", color: "金", size: "10.5寸", unitprice: 3330.00 },
+                    { number: 16, goodsname: "iPad Air3 2019款 WIFI-256G", color: "黑", size: "10.5寸", unitprice: 4480.00 },
+                    { number: 17, goodsname: "iPad Air3 2019款 WIFI-256G", color: "白", size: "10.5寸", unitprice: 4550.00 },
+                    { number: 18, goodsname: "iPad Air3 2019款 WIFI-256G", color: "金", size: "10.5寸", unitprice: 4565.00 },
+                    { number: 19, goodsname: "iPad Air3 2019款 4G-64G", color: "黑", size: "10.5寸", unitprice: 3900.00 },
+                    { number: 20, goodsname: "iPad Air3 2019款 4G-64G", color: "白", size: "10.5寸", unitprice: 3900.00 },
+                    { number: 21, goodsname: "iPad Air3 2019款 4G-64G", color: "金", size: "10.5寸", unitprice: 3900.00 },
+                    { number: 22, goodsname: "iPad Air3 2019款 4G-256G", color: "黑", size: "10.5寸", unitprice: 5200.00 },
+                    { number: 23, goodsname: "iPad Air3 2019款 4G-256G", color: "白", size: "10.5寸", unitprice: 5000.00 },
+                    { number: 24, goodsname: "iPad Air3 2019款 4G-256G", color: "金", size: "10.5寸", unitprice: 5000.00 },
+                    { number: 25, goodsname: "iPad mini5 WIFI-64G", color: "黑", size: "7.9寸", unitprice: 2465.00 },
+                    { number: 26, goodsname: "iPad mini5 WIFI-64G", color: "白", size: "7.9寸", unitprice: 2465.00 },
+                    { number: 27, goodsname: "iPad mini5 WIFI-64G", color: "金", size: "7.9寸", unitprice: 2470.00 },
+                    { number: 28, goodsname: "iPad mini5 WIFI-256G", color: "黑", size: "7.9寸", unitprice: 3435.00 },
+                    { number: 29, goodsname: "iPad mini5 WIFI-256G", color: "白", size: "7.9寸", unitprice: 3440.00 },
+                    { number: 30, goodsname: "iPad mini5 WIFI-256G", color: "金", size: "7.9寸", unitprice: 3445.00 },
+                    { number: 31, goodsname: "iPad mini5 4G-64G", color: "黑", size: "7.9寸", unitprice: 3480.00 },
+                    { number: 32, goodsname: "iPad mini5 4G-64G", color: "白", size: "7.9寸", unitprice: 3480.00 },
+                    { number: 33, goodsname: "iPad mini5 4G-64G", color: "金", size: "7.9寸", unitprice: 3480.00 },
+                    { number: 34, goodsname: "iPad mini5 4G-256G", color: "黑", size: "7.9寸", unitprice: 4600.00 },
+                    { number: 35, goodsname: "iPad mini5 4G-256G", color: "白", size: "7.9寸", unitprice: 4600.00 },
+                    { number: 36, goodsname: "iPad mini5 4G-256G", color: "金", size: "7.9寸", unitprice: 4600.00 },
+                    { number: 37, goodsname: "有线耳机", color: "金", size: "/", unitprice: 895.00 },
+                    { number: 38, goodsname: "无线耳机", color: "金", size: "/", unitprice: 1175.00 },
+                    { number: 39, goodsname: "鼠标", color: "金", size: "/", unitprice: 435.00 },
+                    { number: 40, goodsname: "三代耳机", color: "金", size: "/", unitprice: 0.00 },
+                    { number: 41, goodsname: "2020年11寸妙控键盘", color: "金", size: "/", unitprice: 2050.00 },
+                    { number: 42, goodsname: "2020年12.9寸妙控键盘", color: "金", size: "/", unitprice: 2430.00 },
+                    { number: 43, goodsname: "2020年11寸键盘", color: "金", size: "/", unitprice: 1250.00 },
+                    { number: 44, goodsname: "2020年12.9寸键盘", color: "金", size: "/", unitprice: 1400.00 },
+                    { number: 45, goodsname: "pro笔（1代）", color: "金", size: "/", unitprice: 650.00 },
+                    { number: 46, goodsname: "pro笔（2代）", color: "金", size: "/", unitprice: 870.00 }
+                ]
+        };
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            //初始化打印插件
+            hiprint.init();
+
+            var hiprintTemplate = new hiprint.PrintTemplate({ settingContainer: "#PrintElementOptionSetting" });
+            var panel = hiprintTemplate.addPrintPanel({ width: 210, height: 297, paperHeader: 45, paperFooter: 780, paperType: "A4" });
+            panel.addPrintText({ options: { width: 259, height: 22, top: 12, left: 175.5, title: "商品销售单", textAlign: "center", fontSize: 18, fontWeight: "900", lineHeight: 22} });
+            panel.addPrintText({ options: { width: 80, height: 16, top: 28, left: 500, title: "日期", textAlign: "right", fontSize: 6, textContentVerticalAlign: "middle", field: "xiaoshouriqi", testData: "2020-10-05"} });
+            panel.addPrintText({ options: { width: 300, height: 16, top: 784.5, left: 278.5, title: "订单总金额", textAlign: "right", fontSize: 12, fontWeight: "900", lineHeight: 16, field: "zongjijine", testData: "0.00", formatter: function (title, value, options, templateData, target) { return value.toLocaleString() + " 元"; } } });
+            panel.addPrintTable({
+                printElementType: {
+                    footerFormatter: function (options, rows, data, currentPageGridRowsData) {
+                        var sum = 0;
+                        for (var i = 0; i < currentPageGridRowsData.length; i++) {
+                            sum += currentPageGridRowsData[i].unitprice;
+                        }
+                        return '<tr><td colspan="6" style="text-align: right;">小计：' + sum.toLocaleString() + ' 元&nbsp;</td></tr>';
+                    }
+                },
+                options: {
+                    "tableFooterRepeat": "page", //no：不显示表格脚、page：每页显示表格脚、last：最后显示表格脚
+                    "tableHeaderFontWeight": "bold", //表头加粗，lighter、bold、bolder、100-900
+                    "tableHeaderBackground": "#cccccc",
+                    "left": 16.5,
+                    "top": 57,
+                    "height": 60,
+                    "width": 562.5,
+                    "textAlign": "center",
+                    "field": "table",
+                    "columns": [[{
+                        "title": "序号",
+                        "field": "number",
+                        "width": 40,
+                        "colspan": 1,
+                        "rowspan": 1
+                    }, {
+                        "title": "商品名称",
+                        "field": "goodsname",
+                        "colspan": 1,
+                        "rowspan": 1
+                    }, {
+                        "title": "颜色",
+                        "field": "color",
+                        "colspan": 1,
+                        "rowspan": 1
+                    }, {
+                        "title": "尺寸",
+                        "field": "size",
+                        "colspan": 1,
+                        "rowspan": 1
+                    }, {
+                        "title": "单价",
+                        "field": "unitprice",
+                        "colspan": 1,
+                        "rowspan": 1,
+                        "formatter": function (value, row, index, options) { return value + " 元"; }
+                    }]]
+                }
+            });
+            hiprintTemplate.design("#hiprint-printTemplate");
+
+            $("#btnPrint").click(function () {
+                hiprintTemplate.print(printData);
+            });
+            $("#btnBatchPrint").click(function () {
+                hiprintTemplate.print([printData, printData, printData]);
+            });
+            $("#btnCreateHtml").click(function () {
+                $("#print-preview").html(hiprintTemplate.getHtml(printData));
+            });
+
+        });
+    </script>
+  </body>
+ </html> 
